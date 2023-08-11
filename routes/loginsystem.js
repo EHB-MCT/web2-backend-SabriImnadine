@@ -214,7 +214,22 @@ app.delete('/deleteChallenge/:challengeId', async (req, res) => {
 });
 
 
+app.get('/all-challenges', async (req, res) => {
+  try {
+    const challenges = await client
+      .db('Augustus-web2')
+      .collection('challenges')
+      .find({})
+      .toArray();
 
+    res.status(200).json({ challenges });
+  } catch (error) {
+    console.error('Fout bij het ophalen van alle uitdagingen:', error);
+    res.status(500).json({
+      message: 'Er is een fout opgetreden bij het ophalen van alle uitdagingen'
+    });
+  }
+});
 
 app.get('/my-challenges', async (req, res) => {
   const { userId } = req.query;
@@ -235,25 +250,33 @@ app.get('/my-challenges', async (req, res) => {
   }
 });
 
-app.get('/all-challenges', async (req, res) => {
+app.get('/challenges/:challengeId', async (req, res) => {
+  const {
+    challengeId
+  } = req.params;
+
   try {
-    const challenges = await client
+    const challenge = await client
       .db('Augustus-web2')
       .collection('challenges')
-      .find({})
-      .toArray();
+      .findOne({
+        challengeId
+      });
 
-    res.status(200).json({ challenges });
+    if (!challenge) {
+      return res.status(404).json({
+        message: 'Défi introuvable'
+      });
+    }
+
+    res.status(200).json(challenge);
   } catch (error) {
-    console.error('Fout bij het ophalen van alle uitdagingen:', error);
+    console.error('Fout bij ophalen van gebruikersuitdagingen:', error);
     res.status(500).json({
-      message: 'Er is een fout opgetreden bij het ophalen van alle uitdagingen'
+      message: 'Er is een fout opgetreden bij het ophalen van gebruikersuitdagingen'
     });
   }
 });
-
-
-
 
 app.listen(port, () => {
   console.log(`Server is gestart op poort ${port}`);
