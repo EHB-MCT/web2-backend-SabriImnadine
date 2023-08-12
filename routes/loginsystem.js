@@ -250,6 +250,35 @@ app.get('/my-challenges', async (req, res) => {
   }
 });
 
+app.post('/checkResult/:challengeId', async (req, res) => {
+  const { challengeId } = req.params;
+  const { result } = req.body;
+
+  try {
+    const challenge = await client
+      .db('Augustus-web2')
+      .collection('challenges')
+      .findOne({
+        challengeId
+      });
+
+    if (!challenge) {
+      return res.status(404).json({ message: 'Défi introuvable' });
+    }
+
+    // Vérification du résultat soumis avec le résultat attendu du défi
+    if (result === challenge.result) {
+      res.status(200).json({ message: 'Challenge succeeded' });
+    } else {
+      res.status(400).json({ message: 'Challenge failed' });
+    }
+  } catch (error) {
+    console.error('Error checking result:', error);
+    res.status(500).json({ message: 'An error occurred while checking the result' });
+  }
+});
+
+
 app.get('/challenges/:challengeId', async (req, res) => {
   const {
     challengeId
