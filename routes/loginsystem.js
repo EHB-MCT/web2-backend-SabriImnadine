@@ -271,10 +271,10 @@ app.post('/checkResult/:challengeId', async (req, res) => {
       });
 
     if (!challenge) {
-      return res.status(404).json({ message: 'Défi introuvable' });
+      return res.status(404).json({ message: 'Challenge not found' });
     }
 
-    // Vérification du résultat soumis avec le résultat attendu du défi
+  
     if (result === challenge.result) {
       res.status(200).json({ message: 'Challenge succeeded' });
     } else {
@@ -302,7 +302,7 @@ app.get('/challenges/:challengeId', async (req, res) => {
 
     if (!challenge) {
       return res.status(404).json({
-        message: 'Défi introuvable'
+        message: 'Challenge not found'
       });
     }
 
