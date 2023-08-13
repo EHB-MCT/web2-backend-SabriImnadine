@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const loginRoutes = require('./routes/loginsystem'); 
 
-const port = process.env.PORT || 3000;
 
 app.use('/loginsystem', loginRoutes);
 

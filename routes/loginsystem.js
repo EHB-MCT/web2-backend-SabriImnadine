@@ -30,6 +30,14 @@ client.connect((err) => {
   console.log('Verbonden met de MongoDB-database');
 });
 
+
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+  res.status(300).redirect('/index.html');
+});
+
+
 app.post('/register', async (req, res) => {
   const {
     username,
